@@ -1,21 +1,23 @@
 public class InputManager {
     ChessBoard board;
     Position selectedSquare;
+    boolean canMove; // Used for multiplayer
 
     public InputManager(ChessBoard board) {
         this.board = board;
     }
 
     public void squareClicked(Position pos) {
-        if (pos.equals(selectedSquare))
-            deselect();
-        else if (selectedSquare != null && board.validMoves(selectedSquare).contains(pos)) {
-            board.movePiece(selectedSquare, pos);
-            deselect();
-        }
-        else {
+        assert pos != null;
+        if (selectedSquare == null) {
             select(pos);
-        }
+        } else if (selectedSquare != null && board.validMoves(selectedSquare).contains(pos)) {
+            Position temp = selectedSquare;
+            deselect();
+            board.movePiece(temp, pos);
+        } else
+            deselect();
+
     }
 
     private void select(Position pos) {

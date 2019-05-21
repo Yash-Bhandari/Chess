@@ -1,5 +1,3 @@
-import javafx.geometry.Pos;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -67,6 +65,7 @@ public class ChessBoard extends JPanel {
     public void movePiece(Position start, Position end) {
         squareAt(end).setPiece(squareAt(start).getPiece());
         squareAt(start).setPiece(null);
+        pieceAt(end).setHasMoved(true);
     }
 
     /**
@@ -76,9 +75,9 @@ public class ChessBoard extends JPanel {
      * @return true if specified position is on the board (0,0 <= x,y <= 7,7) and does not contain allied piece
      */
     private boolean validSpot(Position pos, int team) {
-        if (pos.getRow() < 0 || pos.getRow() > 0 || pos.getCol() < 0 || pos.getCol() > 0)
+        if (pos.getRow() < 0 || pos.getRow() > 7 || pos.getCol() < 0 || pos.getCol() > 7)
             return false;
-        return pieceAt(pos).getTeam() != team;
+        return pieceAt(pos) == null || pieceAt(pos).getTeam() != team;
     }
 
     public ArrayList<Position> validMoves(Position pos) {
@@ -89,9 +88,10 @@ public class ChessBoard extends JPanel {
         return validMoves;
     }
 
+    //move this to a pawn class
     private ArrayList<Position> pawnMoves(Position pos, Piece p) {
         ArrayList<Position> validMoves = new ArrayList<>();
-        int direction = p.getTeam() == 0 ? 1 : -1;
+        int direction = p.getTeam() == 0 ? -1 : 1;
         Position m1 = new Position(pos.getRow() + direction, pos.getCol());
         if (validSpot(m1, p.getTeam()))
             validMoves.add(m1);

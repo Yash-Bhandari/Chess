@@ -14,7 +14,6 @@ public class SquareListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        System.out.println(actionEvent.getID());
         Square s = (Square)actionEvent.getSource();
         manager.squareClicked(s.getPosition());
     }
