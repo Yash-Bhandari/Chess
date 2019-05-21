@@ -1,13 +1,12 @@
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Piece {
     public enum PieceType {
         PAWN, KNIGHT, BISHOP, ROOK, QUEEN, KING;
-
 
         public BufferedImage loadImage(String team) {
             try {
@@ -20,22 +19,40 @@ public class Piece {
     }
 
     private transient final BufferedImage image;
-    private Point pos;
+    private Position pos;
     private final PieceType type;
+    private final int team;
+    private boolean hasMoved = false;
 
     /**
      *
      * @param type type of piece from PieceType
      * @param team 0 for white, 1 for black
-     * @param pos coordinates on board
      */
-    public Piece(PieceType type, int team, Point pos) {
-        this.pos = pos;
+    public Piece(PieceType type, int team) {
         this.type = type;
+        this.team = team;
         image = type.loadImage(team == 0 ? "w" : "b");
     }
 
     public BufferedImage getImage() {
         return image;
     }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
+    public PieceType getType() {
+        return type;
+    }
+
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public int getTeam() {
+        return team;
+    }
+
 }
