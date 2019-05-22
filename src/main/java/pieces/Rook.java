@@ -14,25 +14,38 @@ public final class Rook extends Piece {
     @Override
     public List<Position> getMoves(ChessBoard board, Position p) {
         List<Position> validMoves = new ArrayList<>();
+        Position move;
 
         int up = 1;
-        while (board.validSpot(p.add(-up, 0), getTeam())) {
-            validMoves.add(p.add(-up++, 0));
+        while (board.validSpot(move = p.add(-up, 0), getTeam())) {
+            validMoves.add(move);
+            if (board.pieceAt(move) != null)
+                break;
+            up++;
         }
 
         int down = 1;
-        while (board.validSpot(p.add(down, 0), getTeam())) {
-            validMoves.add(p.add(down++, 0));
+        while (board.validSpot(move = p.add(down, 0), getTeam())) {
+            validMoves.add(move);
+            if (board.pieceAt(move) != null)
+                break;
+            down++;
         }
 
         int right = 1;
-        while (board.validSpot(p.add(0, right), getTeam())) {
-            validMoves.add(p.add(0, right++));
+        while (board.validSpot(move = p.add(0, right), getTeam())) {
+            validMoves.add(move);
+            if (board.pieceAt(move) != null)
+                break;
+            right++;
         }
 
         int left = 1;
-        while (board.validSpot(p.add(0, -left), getTeam())) {
-            validMoves.add(p.add(0, -left++));
+        while (board.validSpot(move = p.add(0, -left), getTeam())) {
+            validMoves.add(move);
+            if (board.pieceAt(move) != null)
+                break;
+            left++;
         }
 
         return validMoves;
