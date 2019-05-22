@@ -27,16 +27,15 @@ public final class King extends Piece {
         for (Square s : board.getAllSquares()) {
             Piece piece = s.getPiece();
             if (piece != null && piece.getTeam() != getTeam()) {
-                if (piece.getType() != PieceType.KING)
-                    for (Position enemyCapture : piece.getCaptures(board, s.getPosition()))
-                        validMoves.remove(enemyCapture);
-                else
+                if (piece.getType() == PieceType.KING)
                     enemyKing = s.getPosition();
             }
         }
 
         for (int i = validMoves.size() - 1; i > -1; i--)
             if (!board.validSpot(validMoves.get(i), getTeam()) || validMoves.get(i).squaresAwayFrom(enemyKing) <= 1)
+                validMoves.remove(i);
+            else if (board.wouldBeChecked(p, validMoves.get(i)))
                 validMoves.remove(i);
 
         return validMoves;

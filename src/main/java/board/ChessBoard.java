@@ -3,6 +3,7 @@ package board;
 import helper.Position;
 import input.InputManager;
 import input.SquareListener;
+import javafx.geometry.Pos;
 import pieces.Piece;
 
 import javax.swing.*;
@@ -106,6 +107,40 @@ public class ChessBoard extends JPanel {
         for (int row = 0; row < 8; row++)
             squares.addAll(Arrays.asList(board[row]));
         return squares;
+    }
+
+    public boolean wouldBeChecked(Position start, Position end) {
+        Piece temp = pieceAt(end);
+        squareAt(end).setPiece(pieceAt(start));
+        squareAt(start).setPiece(null);
+        boolean ans = isChecked(pieceAt(end).getTeam());
+
+        squareAt(start).setPiece(pieceAt(end));
+        squareAt(end).setPiece(temp);
+
+        return ans;
+    }
+
+    private boolean isChecked(int team) {
+        Position king = new Position(0, 0); //King is guaranteed to be found in following loop
+        for (Square s : getAllSquares())
+            if (s.getPiece() != null && s.getPiece().getType() == Piece.PieceType.KING) {
+                if (s.getPiece().getTeam() == team) {
+                    king = s.getPosition();
+                    break;
+                }
+            }
+
+        Position enemyKing = new Position(0, 0);
+        for (Square s : getAllSquares())
+            if (s.getPiece() != null && s.getPiece().getTeam() != team)
+                if (s.getPiece().getType() != Piece.PieceType.KING)
+                    for (Position m : s.getPiece().getMoves(this, s.getPosition()))
+                        if (m.equals(king))
+                            return true;
+                else
+                    enemyKing = s.getPosition();
+        return king.squaresAwayFrom(enemyKing) <= 1;
     }
 
     /**
