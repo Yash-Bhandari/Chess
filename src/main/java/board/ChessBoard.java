@@ -1,14 +1,21 @@
+package board;
+
+import helper.Position;
+import input.InputManager;
+import input.SquareListener;
+import pieces.Piece;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 
-public class ChessBoard extends JPanel {
+public class ChessBoard extends JPanel{
 
     private Square[][] board;
 
 
-    public ChessBoard() {
-        InputManager manager = new InputManager(this);
+    public ChessBoard(InputManager manager) {
         setLayout(new GridLayout(8, 8));
         board = new Square[8][8];
         for (int row = 0; row < board.length; row++) {
@@ -21,6 +28,7 @@ public class ChessBoard extends JPanel {
     }
 
     private void setPieces(){
+        System.out.println("adding pieces");
         // Black and white pawns
         for (int col = 0; col < 8; col++) {
             addPiece(Piece.PieceType.PAWN, 1, new Position(1, col));
@@ -49,60 +57,49 @@ public class ChessBoard extends JPanel {
     }
 
     private void addPiece(Piece.PieceType type, int team, Position pos) {
-            board[pos.getRow()][pos.getCol()].setPiece(new Piece(type, team));
+            board[pos.getRow()][pos.getCol()].setPiece(Piece.makePiece(type, team, false));
 
     }
 
+    private boolean inBounds(Position pos){
+        if (pos.getRow() < 0 || pos.getRow() > 7 || pos.getCol() < 0 || pos.getCol() > 7)
+            return false;
+        return true;
+    }
+
+
     public Square squareAt(Position pos) {
-        return board[pos.getRow()][pos.getCol()];
+        if(inBounds(pos))
+            return board[pos.getRow()][pos.getCol()];
+        return null;
     }
 
     public Piece pieceAt(Position pos) {
-        return squareAt(pos).getPiece();
+        if (inBounds(pos))
+            return squareAt(pos).getPiece();
+        return null;
     }
 
-    // Moves piece from start to end, deleting whatever piece was at end
+    // Moves pieces from start to end, deleting whatever pieces was at end
     public void movePiece(Position start, Position end) {
-        squareAt(end).setPiece(squareAt(start).getPiece());
+        squareAt(end).setPiece(squareAt(start).getPiece().moved());
         squareAt(start).setPiece(null);
-        pieceAt(end).setHasMoved(true);
     }
 
     /**
      *
      * @param pos position on chessboard
      * @param team 0 for white, 1 for black
-     * @return true if specified position is on the board (0,0 <= x,y <= 7,7) and does not contain allied piece
+     * @return true if specified position is on the board (0,0 <= x,y <= 7,7) and does not contain allied pieces
      */
-    private boolean validSpot(Position pos, int team) {
-        if (pos.getRow() < 0 || pos.getRow() > 7 || pos.getCol() < 0 || pos.getCol() > 7)
-            return false;
-        return pieceAt(pos) == null || pieceAt(pos).getTeam() != team;
+    public boolean validSpot(Position pos, int team) {
+        return inBounds(pos) && (pieceAt(pos) == null || pieceAt(pos).getTeam() != team);
     }
 
-    public ArrayList<Position> validMoves(Position pos) {
+    public List<Position> validMoves(Position pos) {
         Piece p = pieceAt(pos);
-        ArrayList<Position> validMoves = new ArrayList<>();
-        if (p.getType() == Piece.PieceType.PAWN)
-            return pawnMoves(pos, p);
-        return validMoves;
+        if (p == null)
+            return new ArrayList<>();
+        return pieceAt(pos).getMoves(this, pos);
     }
-
-    //move this to a pawn class
-    private ArrayList<Position> pawnMoves(Position pos, Piece p) {
-        ArrayList<Position> validMoves = new ArrayList<>();
-        int direction = p.getTeam() == 0 ? -1 : 1;
-        Position m1 = new Position(pos.getRow() + direction, pos.getCol());
-        if (validSpot(m1, p.getTeam()))
-            validMoves.add(m1);
-
-        if (!p.hasMoved()) {
-            Position m2 = new Position(pos.getRow() + 2 * direction, pos.getCol());
-            if (validSpot(m2, p.getTeam()))
-                validMoves.add(m2);
-        }
-        return validMoves;
-    }
-
-
 }

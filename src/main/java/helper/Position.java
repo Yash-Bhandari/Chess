@@ -1,6 +1,8 @@
-public class Position {
-    private int row;
-    private int col;
+package helper;
+
+public final class Position {
+    private final int row;
+    private final int col;
 
     public Position(int row, int col) {
         this.row = row;
@@ -11,16 +13,12 @@ public class Position {
         return row;
     }
 
-    public void setRow(int row) {
-        this.row = row;
-    }
-
     public int getCol() {
         return col;
     }
 
-    public void setCol(int col) {
-        this.col = col;
+    public Position add(int rowAdd, int colAdd) {
+        return new Position(getRow() + rowAdd, getCol() + colAdd);
     }
 
     @Override
@@ -31,4 +29,10 @@ public class Position {
         }
         return false;
     }
+
+    @Override
+    public String toString(){
+        return String.format("[%d, %d]", row, col);
+    }
+
 }

@@ -1,3 +1,9 @@
+package board;
+
+import helper.Position;
+import input.SquareListener;
+import pieces.Piece;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,20 +1,37 @@
+package input;
+
+import board.ChessBoard;
+import helper.Position;
+import game.Chess;
+
 public class InputManager {
     ChessBoard board;
     Position selectedSquare;
+    Chess game;
     boolean canMove; // Used for multiplayer
+    private int team;
 
-    public InputManager(ChessBoard board) {
+    public InputManager(Chess game) {
+        this.game = game;
+    }
+
+    public InputManager(ChessBoard board, int team) {
+        this.board = board;
+        this.team = team;
+    }
+
+    public void setBoard(ChessBoard board){
         this.board = board;
     }
 
     public void squareClicked(Position pos) {
         assert pos != null;
-        if (selectedSquare == null) {
+        if (selectedSquare == null && board.pieceAt(pos) != null) {
             select(pos);
         } else if (selectedSquare != null && board.validMoves(selectedSquare).contains(pos)) {
             Position temp = selectedSquare;
             deselect();
-            board.movePiece(temp, pos);
+            game.makeMove(temp, pos, false);
         } else
             deselect();
 
