@@ -25,10 +25,9 @@ public class InputManager {
     }
 
     public void squareClicked(Position pos) {
-        assert pos != null;
-        if (selectedSquare == null && board.pieceAt(pos) != null) {
+        if (selectedSquare == null && board.pieceAt(pos) != null && board.pieceAt(pos).getTeam() == game.getWhoseTurn())
             select(pos);
-        } else if (selectedSquare != null && board.validMoves(selectedSquare).contains(pos)) {
+        else if (selectedSquare != null && board.validMoves(selectedSquare).contains(pos)) {
             Position temp = selectedSquare;
             deselect();
             game.makeMove(temp, pos, false);

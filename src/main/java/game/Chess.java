@@ -27,12 +27,16 @@ public class Chess {
 
 
         gameStates = new Stack<>();
-        gameStates.push(new GameState(board, 0));
+        gameStates.push(new GameState(board, 0, 0));
     }
 
     public void makeMove(Position start, Position end, boolean isCastling) {
         board.movePiece(start, end);
         gameStates.push(gameStates.peek().madeMove(board));
+    }
+
+    public int getWhoseTurn() {
+        return gameStates.peek().getWhoseTurn();
     }
 
     public void undo() {

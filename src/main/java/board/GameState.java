@@ -5,22 +5,22 @@ import pieces.Piece;
 
 public class GameState {
     private final Piece [][] pieces;
-    private final int turn;
-
+    private final int whoseTurn;
+    private final int turnNumber;
 
     public GameState madeMove(ChessBoard board) {
-        int newTurn = turn == 0 ? 1 : 0;
 
-        return new GameState(board, newTurn);
+        return new GameState(board, (turnNumber + 1) % 2, turnNumber + 1);
     }
 
-    public GameState(ChessBoard board, int turn) {
+    public GameState(ChessBoard board, int whoseTurn, int turnNumber) {
         pieces = new Piece[8][8];
         for (int row = 0; row < 8; row++)
             for (int col = 0; col < 8; col++)
                 pieces[row][col] = board.pieceAt(new Position(row, col));
 
-        this.turn = turn;
+        this.whoseTurn = whoseTurn;
+        this.turnNumber = turnNumber;
     }
 
     public void setBoard(ChessBoard board) {
@@ -29,7 +29,7 @@ public class GameState {
                 board.squareAt(new Position(row, col)).setPiece(pieces[row][col]);
     }
 
-    public int getTurn() {return turn;}
+    public int getWhoseTurn() {return whoseTurn;}
 
 
 }
