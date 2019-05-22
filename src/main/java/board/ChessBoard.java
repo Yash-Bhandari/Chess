@@ -8,8 +8,10 @@ import pieces.Piece;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+//TODO change inheritance to composition
 public class ChessBoard extends JPanel {
 
     private Square[][] board;
@@ -61,10 +63,8 @@ public class ChessBoard extends JPanel {
 
     }
 
-    private boolean inBounds(Position pos) {
-        if (pos.getRow() < 0 || pos.getRow() > 7 || pos.getCol() < 0 || pos.getCol() > 7)
-            return false;
-        return true;
+    public boolean inBounds(Position pos) {
+        return pos.getRow() >= 0 && pos.getRow() <= 7 && pos.getCol() >= 0 && pos.getCol() <= 7;
     }
 
 
@@ -104,10 +104,22 @@ public class ChessBoard extends JPanel {
     public List<Square> getAllSquares() {
         List<Square> squares = new ArrayList<>();
         for (int row = 0; row < 8; row++)
-            for (int col = 0; col < 8; col++)
-                squares.add(board[row][col]);
+            squares.addAll(Arrays.asList(board[row]));
         return squares;
     }
+
+    /**
+     * Returns 0 if white won, 1 if black won and 2 otherwise
+     */
+    /*
+    public int checkGameOver(int whoseTurn) {
+        boolean checked = false;
+        for (Square s : getAllSquares()){
+            if (s.getPiece().getTeam() != whoseTurn);
+                for (Position c : s.getPiece().getCaptures(this, s.getPosition()))
+        }
+        return 0;
+    }*/
 
 
     public List<Piece> getAllPieces() {

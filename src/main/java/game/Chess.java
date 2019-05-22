@@ -22,7 +22,7 @@ public class Chess {
 
         content = new JPanel();
         content.add(board);
-        content.add(new JToolBar());
+        //content.add(new JToolBar());
 
 
 
@@ -33,6 +33,7 @@ public class Chess {
     public void makeMove(Position start, Position end, boolean isCastling) {
         board.movePiece(start, end);
         gameStates.push(gameStates.peek().madeMove(board));
+
     }
 
     public int getWhoseTurn() {

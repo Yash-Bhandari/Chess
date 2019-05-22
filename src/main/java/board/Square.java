@@ -16,7 +16,7 @@ public class Square extends JButton {
 
 
     private static final int WIDTH = 60;
-    private  static final int HEIGHT = 60;
+    private static final int HEIGHT = 60;
 
 
     private final Position pos;
@@ -30,10 +30,13 @@ public class Square extends JButton {
     public Square(Position pos, SquareListener listener) {
         super(String.format("%d%d",pos.getRow(), pos.getCol()));
         this.pos = pos;
+        setPreferredSize(new Dimension(WIDTH, HEIGHT));
         background = pos.getRow() % 2 == pos.getCol() % 2 ? DARK : LIGHT;
         setBackground(background);
         setPiece(null);
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setBorder(BorderFactory.createEmptyBorder());
+        //setHorizontalAlignment(SwingConstants.CENTER);
+        //setVerticalAlignment(SwingConstants.CENTER);
         addActionListener(listener);
     }
 

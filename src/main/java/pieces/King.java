@@ -27,12 +27,9 @@ public final class King extends Piece {
         for (Square s : board.getAllSquares()) {
             Piece piece = s.getPiece();
             if (piece != null && piece.getTeam() != getTeam()) {
-                if (piece.getType() == PieceType.PAWN)
-                    validMoves.removeAll(pawnCaptures(s));
-
-                else if (piece.getType() != PieceType.KING)
-                    for (Position enemyMove : piece.getMoves(board, s.getPosition()))
-                        validMoves.remove(enemyMove);
+                if (piece.getType() != PieceType.KING)
+                    for (Position enemyCapture : piece.getCaptures(board, s.getPosition()))
+                        validMoves.remove(enemyCapture);
                 else
                     enemyKing = s.getPosition();
             }

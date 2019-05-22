@@ -89,6 +89,10 @@ public abstract class Piece {
         return team;
     }
 
+    public List<Position> getCaptures(ChessBoard board, Position p) {
+        return getMoves(board, p);
+    }
+
     public abstract List<Position> getMoves(ChessBoard board, Position p);
 
 }

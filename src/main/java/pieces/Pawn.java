@@ -26,13 +26,20 @@ public final class Pawn extends Piece {
                 validMoves.add(m2);
         }
 
-        Position cLeft = new Position(p.getRow() + direction, p.getCol() - 1);
-        Position cRight = new Position(p.getRow() + direction, p.getCol() + 1);
-        if (board.pieceAt(cLeft) != null && board.pieceAt(cLeft).getTeam() != getTeam())
-            validMoves.add(cLeft);
-        if (board.pieceAt(cRight) != null && board.pieceAt(cRight).getTeam() != getTeam())
-            validMoves.add(cRight);
+        for (Position m : getCaptures(board, p))
+            if (board.validSpot(m, getTeam()) && board.pieceAt(m) != null)
+                validMoves.add(m);
 
+        return validMoves;
+    }
+
+    @Override
+    public List<Position> getCaptures(ChessBoard board, Position p) {
+        ArrayList<Position> validMoves = new ArrayList<>();
+        int direction = getTeam() == 0 ? -1 : 1;
+
+        validMoves.add(p.add(direction, -1));
+        validMoves.add(p.add(direction, 1));
         return validMoves;
     }
 }
