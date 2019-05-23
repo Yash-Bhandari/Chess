@@ -65,4 +65,9 @@ public class Square extends JButton {
     public Piece getPiece() {
         return piece;
     }
+
+    @Override
+    public String toString() {
+        return String.format("[%d, %d] team %d %s", pos.getRow(), pos.getCol(), piece.getTeam(), piece.getType());
+    }
 }

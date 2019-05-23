@@ -89,10 +89,18 @@ public abstract class Piece {
         return team;
     }
 
-    public List<Position> getCaptures(ChessBoard board, Position p) {
-        return getMoves(board, p);
+    public List<Position> getCaptures(ChessBoard board, Position p, boolean testForCheck) {
+        return getMoves(board, p, testForCheck);
     }
 
-    public abstract List<Position> getMoves(ChessBoard board, Position p);
+    public abstract List<Position> getMoves(ChessBoard board, Position p, boolean testForCheck);
+
+    protected void pruneMoves(List<Position> validMoves, ChessBoard board, Position p) {
+        for (int i = validMoves.size() - 1; i > -1; i--)
+            if (!board.validSpot(validMoves.get(i), getTeam()))
+                validMoves.remove(i);
+            else if (board.wouldBeChecked(p, validMoves.get(i)))
+                validMoves.remove(i);
+}
 
 }

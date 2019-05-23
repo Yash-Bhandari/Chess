@@ -12,7 +12,7 @@ public final class Queen extends Piece {
     }
 
     @Override
-    public List<Position> getMoves(ChessBoard board, Position p) {
+    public List<Position> getMoves(ChessBoard board, Position p, boolean testForCheck) {
         List<Position> validMoves = new ArrayList<>();
         Position move;
 
@@ -80,6 +80,9 @@ public final class Queen extends Piece {
                 break;
             downRight++;
         }
+
+        if (testForCheck)
+            pruneMoves(validMoves, board, p);
 
         return validMoves;
     }
