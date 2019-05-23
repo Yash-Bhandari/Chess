@@ -13,18 +13,21 @@ import java.util.Arrays;
 import java.util.List;
 
 //TODO change inheritance to composition
-public class ChessBoard extends JPanel {
+public class ChessBoard{
 
     private Square[][] board;
+    private Position[] kings = new Position[2];
+    private JPanel content;
 
 
     public ChessBoard(InputManager manager) {
-        setLayout(new GridLayout(8, 8));
+        content = new JPanel();
+        content.setLayout(new GridLayout(8, 8));
         board = new Square[8][8];
         for (int row = 0; row < board.length; row++) {
             for (int col = 0; col < board[0].length; col++) {
                 board[row][col] = new Square(new Position(row, col), new SquareListener(manager));
-                add(board[row][col]);
+                content.add(board[row][col]);
             }
         }
         setPieces();
@@ -47,6 +50,7 @@ public class ChessBoard extends JPanel {
         addPiece(Piece.PieceType.BISHOP, 1, new Position(0, 5));
         addPiece(Piece.PieceType.QUEEN, 1, new Position(0, 3));
         addPiece(Piece.PieceType.KING, 1, new Position(0, 4));
+        kings[1] = new Position(0, 4);
 
         // White backline
         addPiece(Piece.PieceType.ROOK, 0, new Position(7, 0));
@@ -57,6 +61,7 @@ public class ChessBoard extends JPanel {
         addPiece(Piece.PieceType.BISHOP, 0, new Position(7, 5));
         addPiece(Piece.PieceType.QUEEN, 0, new Position(7, 3));
         addPiece(Piece.PieceType.KING, 0, new Position(7, 4));
+        kings[0] = new Position(7, 4);
     }
 
     private void addPiece(Piece.PieceType type, int team, Position pos) {
@@ -80,8 +85,13 @@ public class ChessBoard extends JPanel {
         return null;
     }
 
-    // Moves pieces from start to end, deleting whatever pieces was at end
+    // Moves pieces from start to end, deleting whatever pieces was at end and updating kings location if moved
     public void movePiece(Position start, Position end) {
+        for (int i = 0; i < 2; i++) {
+            if (pieceAt(kings[i]) == pieceAt(start))
+                kings[i] = end;
+        }
+
         squareAt(end).setPiece(squareAt(start).getPiece().moved());
         squareAt(start).setPiece(null);
     }
@@ -110,51 +120,59 @@ public class ChessBoard extends JPanel {
     }
 
     public boolean wouldBeChecked(Position start, Position end) {
+        if (pieceAt(start).getType() == Piece.PieceType.KING)
+            kings[pieceAt(start).getTeam()] = end;
+
         Piece temp = pieceAt(end);
         squareAt(end).setPiece(pieceAt(start));
         squareAt(start).setPiece(null);
+
         boolean ans = isChecked(pieceAt(end).getTeam());
 
         squareAt(start).setPiece(pieceAt(end));
         squareAt(end).setPiece(temp);
 
+        if (pieceAt(start).getType() == Piece.PieceType.KING)
+            kings[pieceAt(start).getTeam()] = start;
+
         return ans;
     }
 
-    private boolean isChecked(int team) {
-        Position king = new Position(0, 0); //King is guaranteed to be found in following loop
-        for (Square s : getAllSquares())
-            if (s.getPiece() != null && s.getPiece().getType() == Piece.PieceType.KING) {
-                if (s.getPiece().getTeam() == team) {
-                    king = s.getPosition();
-                    break;
-                }
-            }
+    public JPanel getContent() {
+        return content;
+    }
 
-        Position enemyKing = new Position(0, 0);
+    private boolean isChecked(int team) {
         for (Square s : getAllSquares())
             if (s.getPiece() != null && s.getPiece().getTeam() != team)
                 if (s.getPiece().getType() != Piece.PieceType.KING)
-                    for (Position m : s.getPiece().getMoves(this, s.getPosition()))
-                        if (m.equals(king))
+                    for (Position m : s.getPiece().getCaptures(this, s.getPosition()))
+                        if (m.equals(kings[team]))
                             return true;
-                else
-                    enemyKing = s.getPosition();
-        return king.squaresAwayFrom(enemyKing) <= 1;
+
+        return kings[0].squaresAwayFrom(kings[1]) == 1;
     }
 
-    /**
-     * Returns 0 if white won, 1 if black won and 2 otherwise
-     */
-    /*
-    public int checkGameOver(int whoseTurn) {
-        boolean checked = false;
-        for (Square s : getAllSquares()){
-            if (s.getPiece().getTeam() != whoseTurn);
-                for (Position c : s.getPiece().getCaptures(this, s.getPosition()))
+    private Position findKing(int team) {
+        for (Square s : getAllSquares())
+            if (s.getPiece() != null && s.getPiece().getTeam() == team && s.getPiece().getType() == Piece.PieceType.KING)
+                return s.getPosition();
+
+        return null;
+    }
+
+    public boolean checkGameOver(int whoseTurn) {
+        if (isChecked(whoseTurn)) {
+            boolean hasMoves = false;
+            for (Square s : getAllSquares()) {
+                if (s.getPiece() != null && s.getPiece().getTeam() == whoseTurn)
+                    if ( s.getPiece().getMoves(this, s.getPosition()).size() > 0)
+                        hasMoves = true;
+            }
+            return hasMoves;
         }
-        return 0;
-    }*/
+        return false;
+    }
 
 
     public List<Piece> getAllPieces() {

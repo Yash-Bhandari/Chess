@@ -21,7 +21,7 @@ public class Chess {
         manager.setBoard(board);
 
         content = new JPanel();
-        content.add(board);
+        content.add(board.getContent());
         //content.add(new JToolBar());
 
 
@@ -33,7 +33,10 @@ public class Chess {
     public void makeMove(Position start, Position end, boolean isCastling) {
         board.movePiece(start, end);
         gameStates.push(gameStates.peek().madeMove(board));
-
+        if (board.checkGameOver(gameStates.peek().getWhoseTurn())) {
+            String winner = gameStates.peek().getWhoseTurn() == 1 ? "White" : "Black";
+            JOptionPane.showMessageDialog(board.getContent(), String.format("Checkmate. %s has won.", winner));
+        }
     }
 
     public int getWhoseTurn() {

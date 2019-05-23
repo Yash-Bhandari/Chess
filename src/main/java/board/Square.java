@@ -35,8 +35,8 @@ public class Square extends JButton {
         setBackground(background);
         setPiece(null);
         setBorder(BorderFactory.createEmptyBorder());
-        //setHorizontalAlignment(SwingConstants.CENTER);
-        //setVerticalAlignment(SwingConstants.CENTER);
+        setHorizontalAlignment(SwingConstants.CENTER);
+        setVerticalAlignment(SwingConstants.CENTER);
         addActionListener(listener);
     }
 
