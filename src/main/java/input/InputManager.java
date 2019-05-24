@@ -25,12 +25,22 @@ public class InputManager {
     }
 
     public void squareClicked(Position pos) {
-        if (selectedSquare == null && board.pieceAt(pos) != null && board.pieceAt(pos).getTeam() == game.getWhoseTurn())
-            select(pos);
+        if (board.pieceAt(pos) != null && board.pieceAt(pos).getTeam() == game.getWhoseTurn()) {
+            if (selectedSquare == null) {
+                select(pos);
+            }
+            else if (selectedSquare == pos) {
+                deselect();
+            }
+            else {
+                deselect();
+                select(pos);
+            }
+        }
         else if (selectedSquare != null && board.validMoves(selectedSquare).contains(pos)) {
-            Position temp = selectedSquare;
-            deselect();
-            game.makeMove(temp, pos, false);
+                Position temp = selectedSquare;
+                deselect();
+                game.makeMove(temp, pos, false);
         } else
             deselect();
 

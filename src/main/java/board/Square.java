@@ -34,7 +34,7 @@ public class Square extends JButton {
         background = pos.getRow() % 2 == pos.getCol() % 2 ? DARK : LIGHT;
         setBackground(background);
         setPiece(null);
-        setBorder(BorderFactory.createEmptyBorder());
+        setBorderPainted(false);
         setHorizontalAlignment(SwingConstants.CENTER);
         setVerticalAlignment(SwingConstants.CENTER);
         addActionListener(listener);
