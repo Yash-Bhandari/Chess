@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-//TODO change inheritance to composition
 public class ChessBoard{
 
     private Square[][] board;
@@ -152,14 +151,6 @@ public class ChessBoard{
                             return true;
 
         return kings[0].squaresAwayFrom(kings[1]) == 1;
-    }
-
-    private Position findKing(int team) {
-        for (Square s : getAllSquares())
-            if (s.getPiece() != null && s.getPiece().getTeam() == team && s.getPiece().getType() == Piece.PieceType.KING)
-                return s.getPosition();
-
-        return null;
     }
 
     /**

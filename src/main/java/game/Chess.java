@@ -6,6 +6,7 @@ import helper.Position;
 import input.InputManager;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
 import java.util.Stack;
 
 public class Chess {
@@ -22,6 +23,9 @@ public class Chess {
 
         content = new JPanel();
         content.add(board.getContent());
+        JButton undo = new JButton("Undo");
+        content.add(undo);
+        undo.addActionListener((ActionEvent e) -> {undo();});
         //content.add(new JToolBar());
 
 
@@ -44,7 +48,8 @@ public class Chess {
     }
 
     public void undo() {
-        gameStates.pop().setBoard(board);
+        gameStates.pop();
+        gameStates.peek().setBoard(board);
     }
 
     public JPanel getContent() {
@@ -55,3 +60,4 @@ public class Chess {
         board = new ChessBoard(manager);
     }
 }
+
