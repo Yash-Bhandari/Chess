@@ -12,7 +12,7 @@ public final class Rook extends Piece {
     }
 
     @Override
-    public List<Position> getMoves(ChessBoard board, Position p) {
+    public List<Position> getMoves(ChessBoard board, Position p, boolean testForCheck) {
         List<Position> validMoves = new ArrayList<>();
         Position move;
 
@@ -47,6 +47,9 @@ public final class Rook extends Piece {
                 break;
             left++;
         }
+
+        if (testForCheck)
+            pruneMoves(validMoves, board, p);
 
         return validMoves;
     }

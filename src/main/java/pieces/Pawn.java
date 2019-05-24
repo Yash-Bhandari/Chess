@@ -13,7 +13,7 @@ public final class Pawn extends Piece {
 
 
     @Override
-    public List<Position> getMoves(ChessBoard board, Position p) {
+    public List<Position> getMoves(ChessBoard board, Position p, boolean testForCheck) {
         ArrayList<Position> validMoves = new ArrayList<>();
         int direction = getTeam() == 0 ? -1 : 1;
         Position m1 = new Position(p.getRow() + direction, p.getCol());
@@ -26,20 +26,26 @@ public final class Pawn extends Piece {
                 validMoves.add(m2);
         }
 
-        for (Position m : getCaptures(board, p))
+        for (Position m : getCaptures(board, p, testForCheck))
             if (board.validSpot(m, getTeam()) && board.pieceAt(m) != null)
                 validMoves.add(m);
+
+        if (testForCheck)
+            pruneMoves(validMoves, board, p);
 
         return validMoves;
     }
 
     @Override
-    public List<Position> getCaptures(ChessBoard board, Position p) {
+    public List<Position> getCaptures(ChessBoard board, Position p, boolean testForCheck) {
         ArrayList<Position> validMoves = new ArrayList<>();
         int direction = getTeam() == 0 ? -1 : 1;
 
         validMoves.add(p.add(direction, -1));
         validMoves.add(p.add(direction, 1));
+
+        if (testForCheck)
+            pruneMoves(validMoves, board, p);
         return validMoves;
     }
 }

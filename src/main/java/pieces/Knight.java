@@ -12,7 +12,7 @@ public final class Knight extends Piece {
     }
 
     @Override
-    public List<Position> getMoves(ChessBoard board, Position p) {
+    public List<Position> getMoves(ChessBoard board, Position p, boolean testForCheck) {
         List<Position> validMoves = new ArrayList<>();
 
         validMoves.add(p.add(1, 2));
@@ -27,6 +27,9 @@ public final class Knight extends Piece {
         for (int i = validMoves.size() - 1; i > -1; i--)
             if (!board.validSpot(validMoves.get(i), getTeam()))
                 validMoves.remove(i);
+
+        if (testForCheck)
+            pruneMoves(validMoves, board, p);
 
         return validMoves;
     }

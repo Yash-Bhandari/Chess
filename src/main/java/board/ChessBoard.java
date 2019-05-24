@@ -75,7 +75,8 @@ public class ChessBoard{
 
 
     public Square squareAt(Position pos) {
-        assert inBounds(pos);
+        if (!inBounds(pos))
+            System.out.println(pos);
         return board[pos.getRow()][pos.getCol()];
     }
 
@@ -109,7 +110,7 @@ public class ChessBoard{
         Piece p = pieceAt(pos);
         if (p == null)
             return new ArrayList<>();
-        return pieceAt(pos).getMoves(this, pos);
+        return pieceAt(pos).getMoves(this, pos, true);
     }
 
     public List<Square> getAllSquares() {
@@ -146,7 +147,7 @@ public class ChessBoard{
         for (Square s : getAllSquares())
             if (s.getPiece() != null && s.getPiece().getTeam() != team)
                 if (s.getPiece().getType() != Piece.PieceType.KING)
-                    for (Position m : s.getPiece().getCaptures(this, s.getPosition()))
+                    for (Position m : s.getPiece().getCaptures(this, s.getPosition(), false))
                         if (m.equals(kings[team]))
                             return true;
 
@@ -161,15 +162,20 @@ public class ChessBoard{
         return null;
     }
 
+    /**
+     *
+     * @param whoseTurn
+     * @return true if player whoseTurn has no valid moves
+     */
     public boolean checkGameOver(int whoseTurn) {
         if (isChecked(whoseTurn)) {
             boolean hasMoves = false;
             for (Square s : getAllSquares()) {
                 if (s.getPiece() != null && s.getPiece().getTeam() == whoseTurn)
-                    if ( s.getPiece().getMoves(this, s.getPosition()).size() > 0)
+                    if ( s.getPiece().getMoves(this, s.getPosition(), true).size() > 0)
                         hasMoves = true;
             }
-            return hasMoves;
+            return !hasMoves;
         }
         return false;
     }

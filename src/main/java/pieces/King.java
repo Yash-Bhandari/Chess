@@ -13,7 +13,7 @@ public final class King extends Piece {
     }
 
     @Override
-    public List<Position> getMoves(ChessBoard board, Position p) {
+    public List<Position> getMoves(ChessBoard board, Position p, boolean testForCheck) {
         List<Position> validMoves = new ArrayList<>();
 
         validMoves.add(p.add(1, 1));
@@ -25,11 +25,9 @@ public final class King extends Piece {
         validMoves.add(p.add(0, 1));
         validMoves.add(p.add(0, -1));
 
-        for (int i = validMoves.size() - 1; i > -1; i--)
-            if (!board.validSpot(validMoves.get(i), getTeam()))
-                validMoves.remove(i);
-            else if (board.wouldBeChecked(p, validMoves.get(i)))
-                validMoves.remove(i);
+
+
+        pruneMoves(validMoves, board, p);
 
         return validMoves;
     }
