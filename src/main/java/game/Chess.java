@@ -34,7 +34,7 @@ public class Chess {
         gameStates.push(new GameState(board, 0, 0));
     }
 
-    public void makeMove(Position start, Position end, boolean isCastling) {
+    public void makeMove(Position start, Position end) {
         board.movePiece(start, end);
         gameStates.push(gameStates.peek().madeMove(board));
         if (board.checkGameOver(gameStates.peek().getWhoseTurn())) {
@@ -42,6 +42,9 @@ public class Chess {
             JOptionPane.showMessageDialog(board.getContent(), String.format("Checkmate. %s has won.", winner));
         }
     }
+
+    public void castle(Position kStart, Position kEnd, Position rStart, Position rEnd) {}
+
 
     public int getWhoseTurn() {
         return gameStates.peek().getWhoseTurn();

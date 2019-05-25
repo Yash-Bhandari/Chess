@@ -28,15 +28,12 @@ public class Square extends JButton {
 
 
     public Square(Position pos, SquareListener listener) {
-        super(String.format("%d%d",pos.getRow(), pos.getCol()));
         this.pos = pos;
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         background = pos.getRow() % 2 == pos.getCol() % 2 ? DARK : LIGHT;
         setBackground(background);
         setPiece(null);
         setBorderPainted(false);
-        setHorizontalAlignment(SwingConstants.CENTER);
-        setVerticalAlignment(SwingConstants.CENTER);
         addActionListener(listener);
     }
 

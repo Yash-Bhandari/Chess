@@ -40,7 +40,7 @@ public class InputManager {
         else if (selectedSquare != null && board.validMoves(selectedSquare).contains(pos)) {
                 Position temp = selectedSquare;
                 deselect();
-                game.makeMove(temp, pos, false);
+                game.makeMove(temp, pos);
         } else
             deselect();
 
