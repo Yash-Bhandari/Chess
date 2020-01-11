@@ -3,7 +3,6 @@ package board;
 import helper.Position;
 import input.InputManager;
 import input.SquareListener;
-import javafx.geometry.Pos;
 import pieces.Piece;
 
 import javax.swing.*;
